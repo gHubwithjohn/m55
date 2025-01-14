@@ -1,0 +1,21 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  - task: DownloadBuildArtifacts@0
+    inputs:
+      buildType: 'specific'
+      downloadType: 'specific'
+      downloadPath: '$(Build.ArtifactStagingDirectory)'
+
+  - task: AzureWebApp@1
+    inputs:
+      azureSubscription: '<your-azure-subscription>'
+      appName: 'm55-web-app'
+      package: '$(Build.ArtifactStagingDirectory)/drop/*.zip'
+      deploymentMethod: 'auto'
