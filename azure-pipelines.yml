@@ -1,8 +1,3 @@
-# Node.js
-# Build a general Node.js project with npm.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
-
 trigger:
 - main
 
@@ -18,4 +13,31 @@ steps:
 - script: |
     npm install
     npm run build
-  displayName: 'npm install and build'
+  displayName: 'Install dependencies and build'
+
+# Example: Run linting or static code analysis
+- script: |
+    npm run lint
+  displayName: 'Run code linting'
+
+# Example: Run tests (if you have test scripts set up)
+- script: |
+    npm test
+  displayName: 'Run tests'
+
+# Save build artifacts (optional, if needed for further stages or deployments)
+- task: PublishBuildArtifacts@1
+  inputs:
+    artifactName: 'drop'
+    publishLocation: 'Container'
+  displayName: 'Publish build artifacts'
+
+# Example: Deploy step (if you have a deployment pipeline setup)
+# This step depends on where you're deploying your app, for instance, to Azure, AWS, etc.
+- task: AzureWebApp@1
+  inputs:
+    azureSubscription: 'Your Azure Subscription'
+    appName: 'Your Azure Web App Name'
+    package: $(System.DefaultWorkingDirectory)/drop/*.zip
+  displayName: 'Deploy to Azure Web App'
+
